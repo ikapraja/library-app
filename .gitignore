@@ -1,0 +1,22 @@
+# Database backups & Development Scripts
+# PENTING: File SQL dan skrip migrasi tidak boleh diunggah ke GitHub publik karena berisi rahasia database!
+/_development_scripts/
+*.sql
+
+# Log files
+*.log
+*.tmp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Agent/AI Folders
+/.agents/
+/.gemini/
+/brain/
