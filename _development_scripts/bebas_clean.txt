@@ -1,0 +1,133 @@
+<i class="fa-solid fa-file-circle-check"
+                style="font-size: 5rem; color: var(--accent-gold); margin-bottom: 20px;"></i>
+            <h2>Layanan Surat Keterangan Bebas Pustaka</h2>
+            <p style="text-align: justify; margin-bottom: 40px; font-size: 1.1rem; color: #555;">Bebas pustaka merupakan
+                surat yang menerangkan bahwa taruna telah tidak memiliki tanggungan pinjaman buku ataupun tanggungan
+                denda pada perpustakaan. Surat Keterangan Bebas Pustaka merupakan salah satu persyaratan untuk mengikuti
+                wisuda.</p>
+
+            <div
+                style="text-align: left; background: var(--white); padding: 40px; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 30px;">
+                <h3
+                    style="color: var(--primary-blue); border-bottom: 2px solid var(--accent-gold); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.5rem;">
+                    <i class="fa-solid fa-list-check" style="color: var(--accent-gold);"></i> Persyaratan Mendapatkan
+                    Surat
+                </h3>
+                <p style="margin-bottom: 15px;">Adapun persyaratan bagi taruna untuk mendapatkan Surat Keterangan Bebas
+                    Pustaka adalah sebagai berikut:</p>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #444;">
+                    <li style="margin-bottom: 10px;">Tidak memiliki tanggungan pinjaman koleksi pustaka dan denda
+                        peminjaman pada Unit Perpustakaan.</li>
+                    <li style="margin-bottom: 10px;">Melakukan unggah mandiri melalui laman Upload Mandiri untuk file
+                        laporan magang, skripsi dan artikel ilmiah.</li>
+                    <li style="margin-bottom: 10px;">Mengunduh formulir-formulir dari laman ini sebagai berikut:
+                        <ul style="list-style-type: disc; margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+                            <li><a href="https://docs.google.com/document/d/1EHa1PY7etBXU7c1M4_GU87KNqcRTBcaae7A7cfUzfIM/edit?usp=sharing"
+                                    target="_blank"
+                                    style="color: #0056b3; text-decoration: underline; font-weight: 500;">Formulir tanda
+                                    terima penyerahan laporan Skripsi / KKW.</a></li>
+                            <li><a href="https://docs.google.com/document/d/1sodrzsxyywe3Q9V1k5EHJ3TlAVME9D_THJUVOZ4vXi8/edit?usp=sharing"
+                                    target="_blank"
+                                    style="color: #0056b3; text-decoration: underline; font-weight: 500;">Formulir tanda
+                                    terima penyerahan laporan magang.</a></li>
+                            <li><a href="https://docs.google.com/document/d/1Mjsq2iSmnA6mcPnmlyLRFMA-pM0t_NnzDCUUDNJsVsM/edit?usp=sharing"
+                                    target="_blank"
+                                    style="color: #0056b3; text-decoration: underline; font-weight: 500;">Formulir
+                                    pernyataan persetujuan publikasi karya ilmiah untuk kepentingan akademis.</a></li>
+                            <li><a href="https://docs.google.com/document/d/1QYzjhXJUqePiuRxVAos1GjzZLlrJoOTE_o_0KjveCqI/edit?usp=sharing"
+                                    target="_blank"
+                                    style="color: #0056b3; text-decoration: underline; font-weight: 500;">Formulir tanda
+                                    terima penyerahan sumbangan buku.</a></li>
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 10px;">Datang ke Unit Perpustakaan Kampus Perintis untuk menyerahkan:
+                        <ul style="list-style-type: disc; margin-left: 20px; margin-top: 10px;">
+                            <li>Formulir yang sudah diisi.</li>
+                            <li>CD berisi laporan magang sebanyak 1 (satu) keping.</li>
+                            <li>CD berisi skripsi dan produk hasil penelitian sebanyak 1 (satu) keping.</li>
+                            <li>Buku yang akan disumbangkan pada Unit Perpustakaan.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div
+                style="text-align: left; background: var(--white); padding: 40px; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                <h3
+                    style="color: var(--primary-blue); border-bottom: 2px solid var(--accent-gold); padding-bottom: 10px; margin-bottom: 30px; font-size: 1.5rem;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--accent-gold);"></i> Ketentuan Lebih Lanjut
+                </h3>
+
+                <h4 style="margin-top: 20px; color: var(--secondary-blue); font-size: 1.2rem; margin-bottom: 10px;">A.
+                    Ketentuan format file pada unggah mandiri</h4>
+                <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8; color: #444;">
+                    <li>Berupa file PDF dengan besar maksimal 3 MB.</li>
+                    <li>Format penamaan file laporan magang adalah NOTAR-JENIS LAPORAN-BAGIAN LAPORAN<br> <small
+                            style="color:#777;">(Contoh: 1801000_1801001_1801002_1801003-Magang 1-BAB_1)</small>.</li>
+                    <li>Format penamaan file skripsi adalah NOTAR-JENIS LAPORAN-BAGIAN LAPORAN<br> <small
+                            style="color:#777;">(Contoh: 1801000-SKRIPSI-BAB_1)</small>.</li>
+                    <li>File yang diunggah sudah menyertakan halaman persetujuan dan pengesahan yang sudah dibubuhi
+                        tanda tangan.</li>
+                    <li>File yang diunggah dibagi menjadi ABSTRAK – BAB 1 – BAB 2 – BAB 3 – BAB 4 – BAB 5 – LAMPIRAN.
+                    </li>
+                </ul>
+
+                <h4 style="margin-top: 30px; color: var(--secondary-blue); font-size: 1.2rem; margin-bottom: 10px;">B.
+                    Prosedur Unggah Mandiri</h4>
+                <p style="margin-left: 20px; color: #444;">Bisa diakses pada <a
+                        href="https://drive.google.com/drive/folders/1bflR2M3L5HwUDZVojrtptMtFtBdT9Yeb?usp=sharing"
+                        target="_blank" style="color: #0056b3; font-weight: 600; text-decoration: underline;">tautan
+                        ini</a>.</p>
+
+                <h4 style="margin-top: 30px; color: var(--secondary-blue); font-size: 1.2rem; margin-bottom: 10px;">C.
+                    Ketentuan Sumbangan Buku</h4>
+                <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8; color: #444;">
+                    <li style="margin-bottom: 10px;"><strong>Pengecekan Duplikasi Buku (Wajib):</strong> Mahasiswa wajib
+                        melakukan pengecekan judul buku terlebih dahulu melalui sistem <a
+                            href="https://opac.pktj.ac.id/" target="_blank"
+                            style="color: #0056b3; font-weight: 600; text-decoration: underline;">OPAC perpustakaan</a>
+                        untuk mengetahui jumlah eksemplar yang tersedia. Apabila suatu judul buku sudah memiliki lebih
+                        dari 5 (lima) eksemplar di dalam database, mahasiswa tidak diperkenankan menyumbangkan judul
+                        yang sama.</li>
+                    <li style="margin-bottom: 10px;"><strong>Kategori Buku (Pilih Salah Satu):</strong>
+                        <ul style="list-style-type: circle; margin-left: 20px; margin-top: 5px;">
+                            <li>Buku Program Studi: Wajib relevan dengan kurikulum prodi (Harap koordinasi dengan Unit
+                                Perpustakaan untuk menghindari duplikasi).</li>
+                            <li>Buku Penunjang: Fiksi (Novel, Karya Sastra), Non-Fiksi & Keterampilan (Pemrograman,
+                                Desain), dan Motivasi (Pengembangan Diri).</li>
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 10px;"><strong>Kondisi dan Kebaruan:</strong>
+                        <ul style="list-style-type: circle; margin-left: 20px; margin-top: 5px;">
+                            <li>Kondisi Fisik: Buku harus dalam kondisi baru.</li>
+                            <li>Tahun Terbit: Maksimal 5 tahun terakhir dari tahun berjalan.</li>
+                            <li>Bukti Pembelian: Wajib melampirkan Nota Pembelian Asli.</li>
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 10px;"><strong>Legalitas dan Konten:</strong>
+                        <ul style="list-style-type: circle; margin-left: 20px; margin-top: 5px;">
+                            <li>Keaslian: Buku harus Original/Asli (Bukan buku bajakan, hasil fotokopi, atau cetakan
+                                ilegal).</li>
+                            <li>Isi/Konten: Tidak mengandung unsur SARA, pornografi, radikalisme, atau pelanggaran
+                                norma.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4 style="margin-top: 30px; color: var(--secondary-blue); font-size: 1.2rem; margin-bottom: 10px;">D.
+                    Ketentuan CD</h4>
+                <ul style="list-style-type: disc; margin-left: 20px; line-height: 1.8; color: #444;">
+                    <li>Format file sesuai dengan file yang diunggah mandiri (poin A).</li>
+                    <li>CD untuk laporan magang berisi file laporan magang.</li>
+                    <li>CD untuk skripsi berisi file skripsi dan file produk hasil penelitian (jika ada).</li>
+                    <li>Cover CD sebagaimana contoh.</li>
+                </ul>
+                <div style="margin-top: 25px; margin-left: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a href="https://docs.google.com/document/d/1NLU-n4iGZ7TMCSrQzKTE5w6FPDEHkAbU/edit?usp=sharing&ouid=104543204542922209954&rtpof=true&sd=true"
+                        target="_blank" class="action-button" style="font-size: 0.95rem; padding: 12px 20px;"><i
+                            class="fa-solid fa-download"></i> Contoh Cover Skripsi</a>
+                    <a href="https://docs.google.com/document/d/1L1v_Oj_IExeZWXQwGsmD1Q-Bzu4hQOaL/edit?usp=sharing&ouid=104543204542922209954&rtpof=true&sd=true"
+                        target="_blank" class="action-button" style="font-size: 0.95rem; padding: 12px 20px;"><i
+                            class="fa-solid fa-download"></i> Contoh Cover Laporan Magang</a>
+                </div>
+            </div>

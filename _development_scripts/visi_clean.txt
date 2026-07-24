@@ -1,0 +1,9 @@
+<h2>Visi</h2>
+            <p>Menjadi pusat literasi keselamatan transportasi jalan yang terkemuka.</p>
+            
+            <h2>Misi</h2>
+            <ol>
+                <li>Memberikan rujukan informasi ilmiah bagi segenap sivitas akademika PKTJ maupun masyarakat luas.</li>
+                <li>Menyelenggarakan pengelolaan perpustakaan yang terakreditasi.</li>
+                <li>Menunjang pelaksanaan Tri Dharma Perguruan Tinggi.</li>
+            </ol>

@@ -1,0 +1,28 @@
+<h2>Ketentuan Umum</h2>
+            <ol>
+                <li>Menjaga ketenangan, kebersihan, kerapihan, dan kesopanan.</li>
+                <li>Mengisi buku pengunjung pada komputer yang disediakan.</li>
+                <li><strong style="color: #d9534f;">Dilarang</strong> makan dan minum di dalam ruang Perpustakaan.</li>
+                <li><strong style="color: #d9534f;">Dilarang</strong> merusak buku (merobek, melipat, mencorat-coret, atau mengotori bahan pustaka).</li>
+            </ol>
+
+            <h2>Peminjaman & Pengembalian</h2>
+            <ol>
+                <li>Wajib menunjukkan kartu anggota.</li>
+                <li>Jumlah buku yang boleh dipinjam <strong>maksimal dua eksemplar</strong>.</li>
+                <li>Jangka waktu peminjaman selama <strong>7 hari untuk Taruna</strong> dan <strong>14 hari untuk dosen dan tenaga pendidik</strong>.</li>
+                <li>Peminjaman dapat diperpanjang sebanyak satu kali.</li>
+                <li><strong>Wajib mengembalikan buku</strong> yang dipinjam apabila masa jatuh tempo peminjaman berada pada masa IB panjang.</li>
+                <li>Keterlambatan pengembalian akan dikenakan <strong>denda sebesar Rp1.000,00/hari</strong>, yang akan dikonversi dalam bentuk bahan pustaka.</li>
+                <li>Apabila buku yang dipinjam rusak atau hilang, <strong>wajib mengganti buku yang sama</strong>.</li>
+                <li>Tidak diperkenankan meminjam buku lagi jika masih memiliki pinjaman buku yang belum dikembalikan.</li>
+                <li>Taruna wajib memenuhi syarat <strong style="color: #d9534f;">"BEBAS PUSTAKA"</strong> sebagai salah satu syarat kelulusan.</li>
+            </ol>
+            
+            <h2>Sanksi Pelanggaran</h2>
+            <p>Bagi pemustaka yang melanggar tata tertib akan dikenakan sanksi berupa:</p>
+            <ol>
+                <li>Teguran lisan.</li>
+                <li>Tidak diperkenankan menggunakan fasilitas perpustakaan.</li>
+                <li>Sanksi administratif sesuai dengan peraturan yang berlaku di lingkungan PKTJ.</li>
+            </ol>
