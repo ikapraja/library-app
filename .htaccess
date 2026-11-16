@@ -45,9 +45,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
 # ========================================================
-# 5. CUSTOM ERROR PAGES (UI Error 404, 403, 500)
+# 5. CUSTOM ERROR PAGES (UI Error 400, 403, 404, 500)
 # ========================================================
-ErrorDocument 404 /error.php?code=404
+ErrorDocument 400 /error.php?code=400
 ErrorDocument 403 /error.php?code=403
+ErrorDocument 404 /error.php?code=404
 ErrorDocument 500 /error.php?code=500
 

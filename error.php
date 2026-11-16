@@ -10,13 +10,21 @@ switch ($code) {
         $icon = "fa-shield-halved";
         $color = "#e74c3c";
         break;
+    case 400:
+        http_response_code(400);
+        $title = "400 - Permintaan Tidak Valid";
+        $headline = "Permintaan Tidak Dapat Diproses";
+        $message = "Server tidak dapat memproses permintaan dari peramban Anda. Silakan muat ulang halaman atau kembali ke beranda.";
+        $icon = "fa-circle-exclamation";
+        $color = "#e67e22";
+        break;
     case 500:
         http_response_code(500);
         $title = "500 - Kendala Server";
         $headline = "Terjadi Kendala pada Server";
         $message = "Sistem kami sedang mengalami kendala teknis sementara. Silakan coba beberapa saat lagi atau hubungi pengelola perpustakaan.";
         $icon = "fa-triangle-exclamation";
-        $color = "#e67e22";
+        $color = "#ef4444";
         break;
     case 404:
     default:
