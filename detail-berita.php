@@ -32,16 +32,20 @@ $post = $result->fetch_assoc();
 $image = !empty($post['image_url']) ? $post['image_url'] : 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
 $date = date('d F Y', strtotime($post['updated_at'] ?? $post['publish_date'] ?? $post['created_at']));
 ?>
+<?php
+$is_subfolder = (strpos($_SERVER['REQUEST_URI'], '/library-app/') !== false);
+$app_base = $is_subfolder ? '/library-app/' : '/';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($post['title']); ?> - Perpustakaan PKTJ</title>
-    <link rel="icon" href="/library-app/LOGO PERPUS PKTJ.png" type="image/png">
+    <link rel="icon" href="<?php echo $app_base; ?>LOGO PERPUS PKTJ.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <base href="/library-app/">
+    <base href="<?php echo $app_base; ?>">
     <link rel="stylesheet" href="style.css">
     <style>
         .post-header { margin-bottom: 30px; }
@@ -247,7 +251,7 @@ $date = date('d F Y', strtotime($post['updated_at'] ?? $post['publish_date'] ?? 
                         $r_img = !empty($r['image_url']) ? $r['image_url'] : 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
                         $r_date = date('d M Y', strtotime($r['updated_at'] ?? $r['publish_date'] ?? $r['created_at']));
                         echo '<article class="news-card" style="box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s;" onmouseover="this.style.transform=\'translateY(-5px)\'" onmouseout="this.style.transform=\'translateY(0)\'">';
-                        echo '<a href="/library-app/berita/' . htmlspecialchars($r['slug']) . '" style="text-decoration: none; color: inherit; display: block;">';
+                        echo '<a href="berita/' . htmlspecialchars($r['slug']) . '" style="text-decoration: none; color: inherit; display: block;">';
                         echo '<div class="news-img" style="background-image: url(\'' . htmlspecialchars($r_img) . '\'); height: 150px;"></div>';
                         echo '<div class="news-content" style="padding: 15px;">';
                         echo '<h4 style="font-size: 1.1rem; margin-bottom: 5px;">' . htmlspecialchars($r['title']) . '</h4>';

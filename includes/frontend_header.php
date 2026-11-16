@@ -30,7 +30,7 @@ function get_raw_setting($key, $default = '') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($page_title) ? $page_title . ' - ' . get_setting('site_name') : get_setting('site_name') . ' - ' . get_setting('site_name_long'); ?></title>
     <!-- Favicon -->
-    <link rel="icon" href="/library-app/LOGO PERPUS PKTJ.png" type="image/png">
+    <link rel="icon" href="<?php echo (strpos($_SERVER['REQUEST_URI'], '/library-app/') !== false ? '/library-app/' : '/'); ?>LOGO PERPUS PKTJ.png" type="image/png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->

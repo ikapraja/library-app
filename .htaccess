@@ -4,7 +4,7 @@ RewriteEngine On
 RewriteRule ^meetyourmaker/?$ http://www.linkedin.com/in/bagusikapraja [R=301,L,NC]
 
 # Redirect /login to /admin/login
-RewriteRule ^login/?$ http://%{HTTP_HOST}/library-app/admin/login [R=301,L,NC]
+RewriteRule ^login/?$ admin/login [R=301,L,NC]
 
 # SEO Friendly Routing for News
 RewriteRule ^berita/([a-zA-Z0-9-]+)/?$ detail-berita.php?slug=$1 [QSA,NC,L]
