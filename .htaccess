@@ -1,4 +1,6 @@
 RewriteEngine On
+RewriteBase /
+Options -MultiViews
 
 # Redirect Easter Egg (Meet Your Maker)
 RewriteRule ^meetyourmaker/?$ http://www.linkedin.com/in/bagusikapraja [R=301,L,NC]
