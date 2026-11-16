@@ -121,7 +121,8 @@ if ($hero_type == 'image') {
                         $excerpt = substr(strip_tags($row['content']), 0, 100) . '...';
                         
                         echo '<article class="news-card" style="transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform=\'translateY(-5px)\'" onmouseout="this.style.transform=\'translateY(0)\'">';
-                        echo '<a href="berita/' . htmlspecialchars($row['slug']) . '" style="text-decoration: none; color: inherit; display: block;">';
+                        $news_link = !empty($row['slug']) ? 'berita/' . htmlspecialchars($row['slug']) : 'detail-berita?id=' . $row['id'];
+                        echo '<a href="' . $news_link . '" style="text-decoration: none; color: inherit; display: block;">';
                         echo '<div class="news-img" style="background-image: url(\'' . htmlspecialchars($image) . '\')"></div>';
                         echo '<div class="news-content">';
                         echo '<h4>' . htmlspecialchars($row['title']) . '</h4>';

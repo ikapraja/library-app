@@ -21,14 +21,6 @@ Options -Indexes
 # ========================================================
 RewriteEngine On
 
-# Redirect /login to admin/login (Otomatis kenali localhost vs online, gunakan 302 agar tidak nyangkut di cache browser)
-<If "%{HTTP_HOST} =~ /localhost/">
-    RewriteRule ^login/?$ /library-app/admin/login [R=302,L,NC]
-</If>
-<Else>
-    RewriteRule ^login/?$ /admin/login [R=302,L,NC]
-</Else>
-
 # Blokir akses langsung ke folder internal (includes, _development_scripts, dll)
 RewriteRule ^(includes|_development_scripts|\.agents|\.git)/.*$ - [F,L,NC]
 
@@ -38,28 +30,24 @@ RewriteRule ^db\.php$ - [F,L,NC]
 # Redirect Easter Egg (Meet Your Maker)
 RewriteRule ^meetyourmaker/?$ http://www.linkedin.com/in/bagusikapraja [R=301,L,NC]
 
+# Redirect /login ke admin/login
+RewriteRule ^login/?$ admin/login [R=302,L,NC]
+
 # SEO Friendly Routing for News
-RewriteRule ^berita/([a-zA-Z0-9-]+)/?$ detail-berita.php?slug=$1 [QSA,NC,L]
+RewriteRule ^berita/([^/]+)/?$ detail-berita.php?slug=$1 [QSA,NC,L]
 
 # Jangan terapkan aturan ini pada file atau direktori yang benar-benar ada
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
 
 # Sembunyikan ekstensi .php
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
 # ========================================================
-# 5. CUSTOM ERROR PAGES (UI Error 400, 403, 404, 500)
+# 4. CUSTOM ERROR PAGES (UI Error 400, 403, 404, 500)
 # ========================================================
-<If "%{HTTP_HOST} =~ /localhost/">
-    ErrorDocument 400 /library-app/error.php?code=400
-    ErrorDocument 403 /library-app/error.php?code=403
-    ErrorDocument 404 /library-app/error.php?code=404
-    ErrorDocument 500 /library-app/error.php?code=500
-</If>
-<Else>
-    ErrorDocument 400 /error.php?code=400
-    ErrorDocument 403 /error.php?code=403
-    ErrorDocument 404 /error.php?code=404
-    ErrorDocument 500 /error.php?code=500
-</Else>
+ErrorDocument 400 /error.php?code=400
+ErrorDocument 403 /error.php?code=403
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 500 /error.php?code=500
