@@ -16,4 +16,3 @@ if ($conn->connect_error) {
 $today = date('Y-m-d');
 $track_sql = "INSERT INTO visitor_stats (visit_date, hits) VALUES ('$today', 1) ON DUPLICATE KEY UPDATE hits = hits + 1";
 $conn->query($track_sql);
-?>

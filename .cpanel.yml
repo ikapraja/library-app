@@ -2,5 +2,7 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/library/public_html/
+    - if [ -f $DEPLOYPATH/db.php ]; then /bin/cp $DEPLOYPATH/db.php /home/library/db_backup_active.php; fi
     - /bin/cp -R .htaccess $DEPLOYPATH
     - /bin/cp -R * $DEPLOYPATH
+    - if [ -f /home/library/db_backup_active.php ]; then /bin/cp /home/library/db_backup_active.php $DEPLOYPATH/db.php; fi
