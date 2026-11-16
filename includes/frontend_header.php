@@ -23,14 +23,19 @@ function get_raw_setting($key, $default = '') {
     return isset($settings[$key]) ? $settings[$key] : $default;
 }
 ?>
+<?php
+$is_subfolder = (strpos($_SERVER['REQUEST_URI'], '/library-app/') !== false);
+$app_base = $is_subfolder ? '/library-app/' : '/';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="<?php echo $app_base; ?>">
     <title><?php echo isset($page_title) ? $page_title . ' - ' . get_setting('site_name') : get_setting('site_name') . ' - ' . get_setting('site_name_long'); ?></title>
     <!-- Favicon -->
-    <link rel="icon" href="<?php echo (strpos($_SERVER['REQUEST_URI'], '/library-app/') !== false ? '/library-app/' : '/'); ?>LOGO PERPUS PKTJ.png" type="image/png">
+    <link rel="icon" href="<?php echo $app_base; ?>LOGO PERPUS PKTJ.png" type="image/png">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
