@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/library/public_html/
+    - /bin/cp -R .htaccess $DEPLOYPATH
+    - /bin/cp -R * $DEPLOYPATH
