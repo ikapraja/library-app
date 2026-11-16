@@ -1,22 +1,63 @@
-# Database backups & Development Scripts
-# PENTING: File SQL dan skrip migrasi tidak boleh diunggah ke GitHub publik karena berisi rahasia database!
-/_development_scripts/
+# ========================================================
+# 1. DATABASE & FILE SENSITIF
+# ========================================================
+# Jangan pernah mengunggah database atau skrip rahasia ke GitHub publik
 *.sql
+*.sql.gz
+*.sqlite
+*.db
+/_development_scripts/
+db_backup_active.php
+db_production.php
 
-# Log files
+# ========================================================
+# 2. LOG & CATATAN ERROR SERVER
+# ========================================================
+# Error log cPanel dan PHP yang berisi path server atau pesan error rahasia
+error_log
+access_log
+php_error.log
 *.log
 *.tmp
 
-# OS generated files
+# ========================================================
+# 3. FILE ARSIP & CADANGAN (BACKUP)
+# ========================================================
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+*.bak
+*.backup
+
+# ========================================================
+# 4. ENVIRONMENT & KREDENSIAL
+# ========================================================
+.env
+.env.*
+*secret*
+*credentials*
+
+# ========================================================
+# 5. FILE SISTEM OPERASI (OS JUNK)
+# ========================================================
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
 Thumbs.db
+ehthumbs.db
+desktop.ini
 
-# Agent/AI Folders
+# ========================================================
+# 6. EDITOR & FOLDER AI / AGENT
+# ========================================================
 /.agents/
 /.gemini/
 /brain/
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

@@ -108,6 +108,7 @@ $admin_name = $_SESSION['admin_name'] ?? 'Administrator';
                 <li><a href="users" class="<?php echo basename($_SERVER['PHP_SELF']) == 'users.php' ? 'active' : ''; ?>"><i class="fa-solid fa-users-gear fa-fw"></i> Pengguna</a></li>
                 <li><a href="menus" class="<?php echo basename($_SERVER['PHP_SELF']) == 'menus.php' ? 'active' : ''; ?>"><i class="fa-solid fa-sitemap fa-fw"></i> Menu Navigasi</a></li>
                 <li><a href="settings" class="<?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>"><i class="fa-solid fa-gear fa-fw"></i> Pengaturan Sistem</a></li>
+                <li><a href="logs" class="<?php echo basename($_SERVER['PHP_SELF']) == 'logs.php' ? 'active' : ''; ?>"><i class="fa-solid fa-clock-rotate-left fa-fw"></i> Log Sistem / Error</a></li>
             </ul>
             <?php endif; ?>
         </div>
