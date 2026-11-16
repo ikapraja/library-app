@@ -1,0 +1,7 @@
+# Matikan Directory Browsing di folder uploads
+Options -Indexes
+
+# Cegah eksekusi script berbahaya yang mungkin diunggah
+<FilesMatch "\.(php|php5|php7|php8|phtml|phps|pl|py|cgi)$">
+    Require all denied
+</FilesMatch>

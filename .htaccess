@@ -1,5 +1,32 @@
+# ========================================================
+# 1. KEAMANAN: Matikan Directory Browsing (Mencegah Intip Folder)
+# ========================================================
+Options -Indexes
+
+# ========================================================
+# 2. BLOKIR AKSES FILE SENSITIF
+# ========================================================
+# Blokir file database (.sql), log, config, yaml, env
+<FilesMatch "(^#.*#|\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist|yml|yaml|env)|~)$">
+    Require all denied
+</FilesMatch>
+
+# Blokir file tersembunyi berawalan titik (.git, .gitignore, .htaccess)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# ========================================================
+# 3. ROUTING & PROTEKSI DIREKTORI
+# ========================================================
 RewriteEngine On
 RewriteBase /
+
+# Blokir akses langsung ke folder internal (includes, _development_scripts, dll)
+RewriteRule ^(includes|_development_scripts|\.agents|\.git)/.*$ - [F,L,NC]
+
+# Blokir akses langsung ke db.php dari URL browser
+RewriteRule ^db\.php$ - [F,L,NC]
 
 # Redirect Easter Egg (Meet Your Maker)
 RewriteRule ^meetyourmaker/?$ http://www.linkedin.com/in/bagusikapraja [R=301,L,NC]
@@ -16,3 +43,13 @@ RewriteCond %{REQUEST_FILENAME} !-f
 
 # Sembunyikan ekstensi .php
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# ========================================================
+# 4. SECURITY HEADERS (Proteksi Tambahan)
+# ========================================================
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
