@@ -33,8 +33,8 @@ if ($hero_type == 'image') {
         
         <div class="hero-overlay"></div>
         <div class="container hero-content">
-            <h1 class="animate-up" style="font-size: 3.5rem; color: var(--accent-gold); text-shadow: 2px 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);"><?php echo get_setting('site_name'); ?></h1>
-            <p class="animate-up delay-1" style="font-size: 1.2rem; font-weight: 600; text-transform: uppercase; margin-bottom: 30px; text-shadow: 1px 1px 5px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5);"><?php echo get_setting('site_name_long'); ?></p>
+            <h1 class="animate-up hero-title"><?php echo get_setting('site_name'); ?></h1>
+            <p class="animate-up delay-1 hero-subtitle"><?php echo get_setting('site_name_long'); ?></p>
             
             <div class="search-container animate-up delay-3">
                 <div class="search-tabs">

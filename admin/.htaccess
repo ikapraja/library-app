@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Jangan terapkan jika file atau direktori benar-benar ada
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Sembunyikan ekstensi .php di dalam folder admin
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
