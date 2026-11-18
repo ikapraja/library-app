@@ -21,6 +21,9 @@ Options -Indexes
 # ========================================================
 RewriteEngine On
 
+# Penyelamat: Jika ada cache browser/server yang masih membawa jalur nyasar /home/library/public_html/..., langsung selamatkan ke URL benar
+RewriteRule ^home/library/public_html/(.*)$ /$1 [R=301,L,NC]
+
 # Blokir akses langsung ke folder internal (includes, _development_scripts, dll)
 RewriteRule ^(includes|_development_scripts|\.agents|\.git)/.*$ - [F,L,NC]
 
