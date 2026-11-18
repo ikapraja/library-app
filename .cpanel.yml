@@ -6,4 +6,8 @@ deployment:
     - /bin/cp -R .htaccess $DEPLOYPATH
     - /bin/cp -R * $DEPLOYPATH
     - if [ -f /home/library/db_backup_active.php ]; then /bin/cp /home/library/db_backup_active.php $DEPLOYPATH/db.php; fi
-    - /usr/bin/php $DEPLOYPATH/_development_scripts/sync_db_tracking.php || true
+    - sed -i '/visitor_stats/d' $DEPLOYPATH/db.php || true
+    - sed -i '/track_sql/d' $DEPLOYPATH/db.php || true
+    - if [ -f /home/library/db_backup_active.php ]; then sed -i '/visitor_stats/d' /home/library/db_backup_active.php || true; fi
+    - if [ -f /home/library/db_backup_active.php ]; then sed -i '/track_sql/d' /home/library/db_backup_active.php || true; fi
+    - php $DEPLOYPATH/_development_scripts/sync_db_tracking.php || true

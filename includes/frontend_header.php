@@ -1,4 +1,9 @@
 <?php
+// Cegah browser dan reverse-proxy (NGINX) menyimpan cache HTML dinamis
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/visitor_tracker.php';
 
