@@ -11,3 +11,4 @@ deployment:
     - if [ -f /home/library/db_backup_active.php ]; then sed -i '/visitor_stats/d' /home/library/db_backup_active.php || true; fi
     - if [ -f /home/library/db_backup_active.php ]; then sed -i '/track_sql/d' /home/library/db_backup_active.php || true; fi
     - php $DEPLOYPATH/_development_scripts/sync_db_tracking.php || true
+    - php $DEPLOYPATH/_development_scripts/seed_comprehensive_faq.php || true
