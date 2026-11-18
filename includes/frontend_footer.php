@@ -1,15 +1,15 @@
     <!-- Footer -->
     <?php
-    // Calculate Visitor Stats
+    // Calculate Visitor Stats (Hari Ini, Minggu Ini, Tahun Ini, Sepanjang Waktu)
     $today = date('Y-m-d');
-    $this_week_start = date('Y-m-d', strtotime('monday this week'));
-    $this_month_start = date('Y-m-01');
+    $day_of_week = (int)date('N'); // 1 (Senin) - 7 (Minggu)
+    $this_week_start = date('Y-m-d', strtotime('-' . ($day_of_week - 1) . ' days'));
     $this_year_start = date('Y-01-01');
 
     $stat_today = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date = '$today'")->fetch_assoc()['total'] ?? 0;
-    $stat_week = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_week_start'")->fetch_assoc()['total'] ?? 0;
-    $stat_month = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_month_start'")->fetch_assoc()['total'] ?? 0;
-    $stat_year = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_year_start'")->fetch_assoc()['total'] ?? 0;
+    $stat_week  = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_week_start'")->fetch_assoc()['total'] ?? 0;
+    $stat_year  = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_year_start'")->fetch_assoc()['total'] ?? 0;
+    $stat_all   = $conn->query("SELECT SUM(hits) as total FROM visitor_stats")->fetch_assoc()['total'] ?? 0;
     ?>
     <footer class="footer">
         <div class="footer-top">
@@ -91,12 +91,12 @@
                             <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_week, 0, ',', '.'); ?></td>
                         </tr>
                         <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                            <td style="padding: 10px 0;"><i class="fa-solid fa-calendar-days" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Bulan Ini</td>
-                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_month, 0, ',', '.'); ?></td>
-                        </tr>
-                        <tr>
                             <td style="padding: 10px 0;"><i class="fa-solid fa-calendar-check" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Tahun Ini</td>
                             <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_year, 0, ',', '.'); ?></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px 0;"><i class="fa-solid fa-earth-americas" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Sepanjang Waktu</td>
+                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_all, 0, ',', '.'); ?></td>
                         </tr>
                     </table>
                 </div>

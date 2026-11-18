@@ -2,15 +2,16 @@
 require_once '../db.php';
 require_once 'includes/header.php';
 
-// --- SUMMARY CARDS DATA ---
+// --- SUMMARY CARDS DATA (Hari Ini, Minggu Ini, Tahun Ini, Sepanjang Waktu) ---
 $today = date('Y-m-d');
-$yesterday = date('Y-m-d', strtotime('-1 day'));
-$this_month = date('Y-m-01');
+$day_of_week = (int)date('N'); // 1 (Senin) - 7 (Minggu)
+$this_week_start = date('Y-m-d', strtotime('-' . ($day_of_week - 1) . ' days'));
+$this_year_start = date('Y-01-01');
 
 $stat_today = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date = '$today'")->fetch_assoc()['total'] ?? 0;
-$stat_yesterday = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date = '$yesterday'")->fetch_assoc()['total'] ?? 0;
-$stat_month = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_month'")->fetch_assoc()['total'] ?? 0;
-$stat_all = $conn->query("SELECT SUM(hits) as total FROM visitor_stats")->fetch_assoc()['total'] ?? 0;
+$stat_week  = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_week_start'")->fetch_assoc()['total'] ?? 0;
+$stat_year  = $conn->query("SELECT SUM(hits) as total FROM visitor_stats WHERE visit_date >= '$this_year_start'")->fetch_assoc()['total'] ?? 0;
+$stat_all   = $conn->query("SELECT SUM(hits) as total FROM visitor_stats")->fetch_assoc()['total'] ?? 0;
 
 
 // --- CHART DATA BASED ON RANGE ---
@@ -150,18 +151,18 @@ $chart_data_json = json_encode(array_values($data));
         
         <div class="card" style="margin-bottom: 0; border-bottom: 4px solid #e67e22; display: flex; align-items: center; justify-content: space-between;">
             <div>
-                <p style="margin: 0; color: #777; font-size: 14px; font-weight: 600;">Kemarin</p>
-                <h3 style="margin: 5px 0 0; font-size: 28px; color: var(--primary-bg);"><?= number_format($stat_yesterday, 0, ',', '.') ?></h3>
+                <p style="margin: 0; color: #777; font-size: 14px; font-weight: 600;">Minggu Ini</p>
+                <h3 style="margin: 5px 0 0; font-size: 28px; color: var(--primary-bg);"><?= number_format($stat_week, 0, ',', '.') ?></h3>
             </div>
-            <i class="fa-solid fa-calendar-day" style="font-size: 2.5rem; color: #e67e22; opacity: 0.3;"></i>
+            <i class="fa-solid fa-calendar-week" style="font-size: 2.5rem; color: #e67e22; opacity: 0.3;"></i>
         </div>
         
         <div class="card" style="margin-bottom: 0; border-bottom: 4px solid #2ecc71; display: flex; align-items: center; justify-content: space-between;">
             <div>
-                <p style="margin: 0; color: #777; font-size: 14px; font-weight: 600;">Bulan Ini</p>
-                <h3 style="margin: 5px 0 0; font-size: 28px; color: var(--primary-bg);"><?= number_format($stat_month, 0, ',', '.') ?></h3>
+                <p style="margin: 0; color: #777; font-size: 14px; font-weight: 600;">Tahun Ini</p>
+                <h3 style="margin: 5px 0 0; font-size: 28px; color: var(--primary-bg);"><?= number_format($stat_year, 0, ',', '.') ?></h3>
             </div>
-            <i class="fa-solid fa-calendar-days" style="font-size: 2.5rem; color: #2ecc71; opacity: 0.3;"></i>
+            <i class="fa-solid fa-calendar-check" style="font-size: 2.5rem; color: #2ecc71; opacity: 0.3;"></i>
         </div>
 
         <div class="card" style="margin-bottom: 0; border-bottom: 4px solid #9b59b6; display: flex; align-items: center; justify-content: space-between;">

@@ -6,3 +6,4 @@ deployment:
     - /bin/cp -R .htaccess $DEPLOYPATH
     - /bin/cp -R * $DEPLOYPATH
     - if [ -f /home/library/db_backup_active.php ]; then /bin/cp /home/library/db_backup_active.php $DEPLOYPATH/db.php; fi
+    - /usr/bin/php $DEPLOYPATH/_development_scripts/sync_db_tracking.php || true

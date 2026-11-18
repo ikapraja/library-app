@@ -12,7 +12,4 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-// Visitor Tracking Logic (Page Views)
-$today = date('Y-m-d');
-$track_sql = "INSERT INTO visitor_stats (visit_date, hits) VALUES ('$today', 1) ON DUPLICATE KEY UPDATE hits = hits + 1";
-$conn->query($track_sql);
+// Visitor tracking dipindahkan ke includes/visitor_tracker.php agar pengunjung admin tidak ikut terhitung
