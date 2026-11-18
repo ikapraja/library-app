@@ -84,19 +84,19 @@
                     <table style="width: 100%; color: #ccc; font-size: 0.95rem; margin-top: 15px;">
                         <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                             <td style="padding: 10px 0;"><i class="fa-solid fa-user-clock" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Hari Ini</td>
-                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_today, 0, ',', '.'); ?></td>
+                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><span id="stat-today"><?php echo number_format($stat_today, 0, ',', '.'); ?></span></td>
                         </tr>
                         <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                             <td style="padding: 10px 0;"><i class="fa-solid fa-calendar-week" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Minggu Ini</td>
-                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_week, 0, ',', '.'); ?></td>
+                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><span id="stat-week"><?php echo number_format($stat_week, 0, ',', '.'); ?></span></td>
                         </tr>
                         <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                             <td style="padding: 10px 0;"><i class="fa-solid fa-calendar-check" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Tahun Ini</td>
-                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_year, 0, ',', '.'); ?></td>
+                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><span id="stat-year"><?php echo number_format($stat_year, 0, ',', '.'); ?></span></td>
                         </tr>
                         <tr>
                             <td style="padding: 10px 0;"><i class="fa-solid fa-earth-americas" style="color: var(--accent-gold); margin-right: 8px; width: 15px;"></i> Sepanjang Waktu</td>
-                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><?php echo number_format($stat_all, 0, ',', '.'); ?></td>
+                            <td style="text-align: right; font-weight: bold; color: var(--accent-gold);"><span id="stat-all"><?php echo number_format($stat_all, 0, ',', '.'); ?></span></td>
                         </tr>
                     </table>
                 </div>
@@ -170,6 +170,26 @@
                 }
             });
         }
+
+        // Live Auto-Sync Statistik Pengunjung (Mengatasi NGINX & Browser Cache)
+        (function() {
+            var url = '<?php echo (strpos($_SERVER['REQUEST_URI'] ?? '', '/library-app/') !== false ? '/library-app/' : '/'); ?>api_visitor_stats.php?_t=' + Date.now();
+            fetch(url)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data && data.today) {
+                        var elToday = document.getElementById('stat-today');
+                        var elWeek = document.getElementById('stat-week');
+                        var elYear = document.getElementById('stat-year');
+                        var elAll = document.getElementById('stat-all');
+                        if (elToday) elToday.textContent = data.today;
+                        if (elWeek)  elWeek.textContent  = data.week;
+                        if (elYear)  elYear.textContent  = data.year;
+                        if (elAll)   elAll.textContent   = data.all;
+                    }
+                })
+                .catch(function() {});
+        })();
     </script>
 </body>
 </html>

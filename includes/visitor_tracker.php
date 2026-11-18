@@ -9,8 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Cegah penghitungan jika pengguna adalah ADMIN (semua akun admin / NIP yang sedang login)
-if (!empty($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+// 2. Cegah penghitungan jika pengguna adalah ADMIN (semua akun admin / NIP, baik via session atau cookie)
+if (!empty($_SESSION['admin_logged_in']) || !empty($_COOKIE['is_admin_device'])) {
     return;
 }
 

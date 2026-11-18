@@ -6,6 +6,10 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     header("Location: login");
     exit;
 }
+// Set cookie domain-wide agar saat admin membuka website depan tidak terhitung sebagai pengunjung
+if (!isset($_COOKIE['is_admin_device'])) {
+    setcookie('is_admin_device', '1', time() + (86400 * 30), '/');
+}
 $current_page = basename($_SERVER['PHP_SELF']);
 $admin_name = $_SESSION['admin_name'] ?? 'Administrator';
 ?>
