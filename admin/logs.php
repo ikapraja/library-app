@@ -80,23 +80,14 @@ if (file_exists($active_log_path) && filesize($active_log_path) > 0) {
 }
 ?>
 
-<div class="top-navbar">
-    <div style="font-size: 18px; font-weight: 700; color: var(--primary-bg);">
-        <i class="fa-solid fa-clock-rotate-left" style="color: var(--accent); margin-right: 8px;"></i> Catatan Log Sistem (Error Log)
-    </div>
-    <div class="user-info">
-        <i class="fa-solid fa-user-circle"></i>
-        <span><?php echo htmlspecialchars($admin_name); ?></span>
-        <a href="logout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
-    </div>
-</div>
-
-<div class="content-wrapper" style="flex: 1; overflow-y: auto; padding: 25px;">
+<div class="content-area">
     <?php echo $alert; ?>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
         <div>
-            <h2 style="margin: 0; color: #1a365d; font-size: 20px;">Pemantauan Error Server</h2>
+            <h2 style="margin: 0; color: #1a365d; font-size: 20px;">
+                <i class="fa-solid fa-clock-rotate-left" style="color: var(--accent); margin-right: 8px;"></i> Catatan Log Sistem (Error Log)
+            </h2>
             <p style="margin: 5px 0 0; color: #64748b; font-size: 13px;">
                 Lokasi file: <code><?php echo htmlspecialchars($active_log_name); ?></code> 
                 (Ukuran: <?php echo file_exists($active_log_path) ? round(filesize($active_log_path)/1024, 2) . ' KB' : '0 KB'; ?>)
@@ -179,5 +170,4 @@ if (file_exists($active_log_path) && filesize($active_log_path) > 0) {
     </div>
 </div>
 
-</body>
-</html>
+<?php require_once 'includes/footer.php'; ?>
