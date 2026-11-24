@@ -51,6 +51,49 @@ $faqs = $conn->query("SELECT * FROM chatbot_faq ORDER BY id DESC");
     <button onclick="document.getElementById('faqModal').style.display='flex'" class="btn-primary"><i class="fa-solid fa-plus"></i> Tambah Pertanyaan</button>
 </div>
 
+<?php
+// Cek status integrasi AI Gemini
+$ai_status_row = $conn->query("SELECT setting_value FROM settings WHERE setting_key = 'gemini_ai_enabled'");
+$ai_enabled = ($ai_status_row && $ai_status_row->num_rows > 0) ? ($ai_status_row->fetch_assoc()['setting_value'] === '1') : false;
+
+$ai_key_row = $conn->query("SELECT setting_value FROM settings WHERE setting_key = 'gemini_api_key'");
+$ai_has_key = ($ai_key_row && $ai_key_row->num_rows > 0) ? !empty(trim($ai_key_row->fetch_assoc()['setting_value'])) : false;
+
+$ai_model_row = $conn->query("SELECT setting_value FROM settings WHERE setting_key = 'gemini_model'");
+$ai_model = ($ai_model_row && $ai_model_row->num_rows > 0) ? $ai_model_row->fetch_assoc()['setting_value'] : 'gemini-1.5-flash';
+?>
+
+<!-- Banner Status Otak AI Pustabots -->
+<div style="background: <?php echo ($ai_enabled && $ai_has_key) ? '#f0fdf4' : '#f8fafc'; ?>; border: 1px solid <?php echo ($ai_enabled && $ai_has_key) ? '#86efac' : '#cbd5e1'; ?>; border-radius: 8px; padding: 15px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: <?php echo ($ai_enabled && $ai_has_key) ? '#16a34a' : '#64748b'; ?>; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <i class="fa-solid fa-brain"></i>
+        </div>
+        <div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">
+                Otak AI Pustabots (Google Gemini): 
+                <?php if ($ai_enabled && $ai_has_key): ?>
+                    <span style="color: #16a34a; background: #dcfce7; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;"><i class="fa-solid fa-check-circle"></i> AKTIF (<?php echo htmlspecialchars($ai_model); ?>)</span>
+                <?php else: ?>
+                    <span style="color: #ea580c; background: #ffedd5; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;"><i class="fa-solid fa-circle-exclamation"></i> BELUM AKTIF / KUNCI KOSONG</span>
+                <?php endif; ?>
+            </div>
+            <div style="font-size: 0.82rem; color: #64748b; margin-top: 3px;">
+                <?php if ($ai_enabled && $ai_has_key): ?>
+                    Pertanyaan pemustaka yang tidak ada dalam daftar FAQ di bawah akan otomatis dijawab oleh kecerdasan buatan Google Gemini.
+                <?php else: ?>
+                    Aktifkan Google Gemini AI (100% Gratis) di menu Pengaturan agar Pustabots bisa menjawab pertanyaan di luar daftar FAQ ini layaknya ChatGPT.
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a href="settings" class="btn" style="background: <?php echo ($ai_enabled && $ai_has_key) ? '#16a34a' : '#2563eb'; ?>; font-size: 0.85rem; padding: 8px 16px; border-radius: 6px; text-decoration: none; color: white; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-gear"></i> Atur Kunci API AI
+        </a>
+    </div>
+</div>
+
 <?php if ($error): ?>
     <div class="alert alert-error"><?php echo $error; ?></div>
 <?php endif; ?>

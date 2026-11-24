@@ -12,7 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'contact_email', 'contact_wa', 'contact_phone',
         'address_1_name', 'address_1_text', 'address_1_map',
         'address_2_name', 'address_2_text', 'address_2_map',
-        'hero_type', 'hero_video'
+        'hero_type', 'hero_video',
+        'gemini_ai_enabled', 'gemini_api_key', 'gemini_model', 'gemini_system_instruction'
     ];
     
     $all_success = true;
@@ -57,7 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($settings_to_update as $key) {
         if (isset($_POST[$key])) {
             $val = $conn->real_escape_string($_POST[$key]);
-            $sql = "UPDATE settings SET setting_value = '$val' WHERE setting_key = '$key'";
+            $sql = "INSERT INTO settings (setting_key, setting_value) VALUES ('$key', '$val') 
+                    ON DUPLICATE KEY UPDATE setting_value = '$val'";
             if (!$conn->query($sql)) {
                 $all_success = false;
             }
@@ -387,6 +389,68 @@ function get_set($key) {
                 </fieldset>
             </div>
         </div>
+
+        <!-- Bagian Konfigurasi AI Pustabots (Google Gemini) -->
+        <fieldset style="border: 2px solid #3b82f6; padding: 25px; border-radius: 10px; background: #f8fafc; margin-top: 30px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.08);">
+            <legend style="font-weight: 700; color: #1e40af; padding: 0 12px; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-brain" style="color: #2563eb;"></i> Integrasi Otak AI Pustabots (Google Gemini)
+            </legend>
+            
+            <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem; color: #1e3a8a; line-height: 1.5;">
+                <strong>💡 Konsep Hibrida Cerdas:</strong> Pustabots akan selalu memprioritaskan jawaban resmi dari daftar FAQ internal. Namun jika pengunjung bertanya hal umum, rekomendasi topik skripsi, atau pertanyaan lain di luar FAQ, Pustabots akan otomatis dijawab secara cerdas dan luwes oleh <strong>Google Gemini AI</strong> (100% Gratis dari Google AI Studio)!
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 8px;"><i class="fa-solid fa-power-off"></i> Status Kecerdasan Buatan (AI)</label>
+                    <select name="gemini_ai_enabled" class="form-control" style="font-weight: 600;">
+                        <option value="1" <?php echo get_set('gemini_ai_enabled') === '1' ? 'selected' : ''; ?>>🟢 AKTIF (Gunakan Otak AI saat FAQ Tidak Menjawab)</option>
+                        <option value="0" <?php echo get_set('gemini_ai_enabled') !== '1' ? 'selected' : ''; ?>>⚪ NONAKTIF (Gunakan Pesan Standar & WhatsApp)</option>
+                    </select>
+                    <small style="color: #64748b; display: block; margin-top: 5px;">Pilih <strong>AKTIF</strong> setelah menempelkan Kunci API di bawah.</small>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 8px;"><i class="fa-solid fa-microchip"></i> Model AI yang Digunakan</label>
+                    <select name="gemini_model" class="form-control">
+                        <option value="gemini-3.5-flash-lite" <?php echo (get_set('gemini_model') == 'gemini-3.5-flash-lite' || get_set('gemini_model') == 'gemini-1.5-flash' || get_set('gemini_model') == '') ? 'selected' : ''; ?>>Gemini 3.5 Flash Lite (Sangat Cepat & Rekomendasi)</option>
+                        <option value="gemini-3.8-flash" <?php echo get_set('gemini_model') == 'gemini-3.8-flash' ? 'selected' : ''; ?>>Gemini 3.8 Flash (Model Generasi Baru)</option>
+                        <option value="gemini-2.5-flash" <?php echo get_set('gemini_model') == 'gemini-2.5-flash' ? 'selected' : ''; ?>>Gemini 2.5 Flash</option>
+                    </select>
+                    <small style="color: #64748b; display: block; margin-top: 5px;">Model <strong>Gemini 3.5 Flash Lite</strong> memiliki kuota gratis melimpah dan respons super cepat (1-2 detik).</small>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="font-weight: 600; display: block; margin-bottom: 8px;"><i class="fa-solid fa-key"></i> Kunci API Google Gemini (Google AI Studio Key)</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="password" id="gemini_api_key_input" name="gemini_api_key" class="form-control" value="<?php echo get_set('gemini_api_key'); ?>" placeholder="AIzaSy..." style="font-family: monospace;">
+                    <button type="button" class="btn" onclick="toggleApiKeyVisibility()" style="background: #64748b; white-space: nowrap; padding: 0 15px;"><i class="fa-solid fa-eye" id="toggleApiKeyIcon"></i> Lihat</button>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: #475569; background: #fff; padding: 12px 15px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <strong>Cara Mendapatkan Kunci API Gratis (Hanya butuh 2 Menit):</strong>
+                    <ol style="margin: 6px 0 0 18px; padding: 0;">
+                        <li>Buka tautan <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" style="color: #2563eb; font-weight: bold; text-decoration: underline;">Google AI Studio (Klik di Sini) <i class="fa-solid fa-arrow-up-right-from-square"></i></a> lalu login menggunakan akun Google Anda.</li>
+                        <li>Klik tombol biru <strong>"Create API key"</strong> di pojok kanan atas.</li>
+                        <li>Pilih proyek default atau klik <em>"Create API key in new project"</em>.</li>
+                        <li>Salin kode kunci yang muncul (berawalan <code>AIzaSy...</code>) lalu tempel (Paste) ke dalam kotak isian di atas.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label style="font-weight: 600; display: block; margin-bottom: 8px;"><i class="fa-solid fa-user-gear"></i> Instruksi Watak & Kepribadian AI (System Prompt)</label>
+                <textarea name="gemini_system_instruction" class="form-control" rows="6" placeholder="Tulis instruksi kepribadian AI..." style="height: 140px; font-size: 0.9rem; line-height: 1.5; font-family: inherit;"><?php 
+                    $curr_instruction = get_set('gemini_system_instruction');
+                    if (empty($curr_instruction)) {
+                        echo "Kamu adalah Pustabots, asisten kecerdasan buatan resmi dari Perpustakaan Politeknik Keselamatan Transportasi Jalan (PKTJ) Tegal (Kementerian Perhubungan RI).\nTugas utamamu adalah membantu pemustaka (taruna, dosen, staf, dan pengunjung) dengan ramah, santun, jelas, dan solutif.\n\nPedoman Menjawab:\n1. Gunakan bahasa Indonesia yang baik, sopan, dan hangat.\n2. Berikan bantuan seputar informasi referensi akademik, literatur keselamatan transportasi jalan, rekayasa lalu lintas, otomotif, perkeretaapian, dan tips penulisan skripsi/karya ilmiah.\n3. Jika pemustaka menanyakan hal di luar topik perpustakaan atau studi kampus PKTJ, tolaklah secara halus dan kembalikan obrolan ke seputar perpustakaan.\n4. Jika pertanyaan membutuhkan konfirmasi atau penanganan administratif langsung dari pustakawan (seperti validasi tanda tangan bebas pustaka langsung), arahkan untuk menghubungi WhatsApp resmi Pustakawan PKTJ.\n5. Berikan jawaban yang ringkas, terstruktur rapi dengan poin/bullet agar nyaman dibaca pada layar obrolan.";
+                    } else {
+                        echo $curr_instruction;
+                    }
+                ?></textarea>
+                <small style="color: #64748b; display: block; margin-top: 5px;">Instruksi ini mengatur kepribadian bot. Anda dapat mengubah atau menambahkan aturan khusus perpustakaan di sini kapan saja.</small>
+            </div>
+        </fieldset>
         
         <div style="margin-top: 30px; text-align: center; border-top: 1px solid #ddd; padding-top: 20px;">
             <button type="submit" class="btn" style="padding: 15px 40px; font-size: 1.1rem;"><i class="fa-solid fa-save"></i> SIMPAN SEMUA PENGATURAN</button>
@@ -481,6 +545,20 @@ function get_set($key) {
             }
         });
     });
+
+    function toggleApiKeyVisibility() {
+        const input = document.getElementById('gemini_api_key_input');
+        const icon = document.getElementById('toggleApiKeyIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
 </script>
 
 <?php include 'includes/footer.php'; ?>
