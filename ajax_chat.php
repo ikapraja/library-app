@@ -47,7 +47,7 @@ if (empty($message) && !$is_quick_reply) {
 /**
  * Panggil API Google Gemini (AI)
  */
-function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', $systemInstruction = '') {
+function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', $systemInstruction = '', &$debug = []) {
     if (empty($apiKey) || empty($userMessage)) return false;
 
     if (empty($systemInstruction)) {
@@ -59,8 +59,12 @@ function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', 
             . "Berikan jawaban ringkas, informatif, dan terstruktur rapi (gunakan bullet/poin bila perlu).";
     }
 
+    // Daftar model yang akan dicoba (model utama lalu fallback ke gemini-3.5-flash-lite)
     $modelClean = (!empty($model) && $model !== 'gemini-1.5-flash' && $model !== 'gemini-2.0-flash') ? trim($model) : 'gemini-3.5-flash-lite';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/" . urlencode($modelClean) . ":generateContent?key=" . urlencode($apiKey);
+    $modelsToTry = [$modelClean];
+    if ($modelClean !== 'gemini-3.5-flash-lite') {
+        $modelsToTry[] = 'gemini-3.5-flash-lite';
+    }
 
     $payload = [
         "contents" => [
@@ -81,34 +85,43 @@ function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', 
             "maxOutputTokens" => 800
         ]
     ];
+    $jsonPayload = json_encode($payload);
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json'
-    ]);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    foreach ($modelsToTry as $mTarget) {
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . urlencode($mTarget) . ":generateContent?key=" . urlencode($apiKey);
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError = curl_error($ch);
-    curl_close($ch);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
-    if ($curlError || $httpCode !== 200 || !$response) {
-        return false;
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        $debug['last_model'] = $mTarget;
+        $debug['http_code'] = $httpCode;
+        if ($curlError) $debug['curl_error'] = $curlError;
+
+        if (!$curlError && $httpCode === 200 && $response) {
+            $data = json_decode($response, true);
+            if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+                return trim($data['candidates'][0]['content']['parts'][0]['text']);
+            }
+        }
+
+        $debug['response_snippet'] = substr($response, 0, 150);
     }
 
-    $data = json_decode($response, true);
-    if (!isset($data['candidates'][0]['content']['parts'][0]['text'])) {
-        return false;
-    }
-
-    return trim($data['candidates'][0]['content']['parts'][0]['text']);
+    return false;
 }
 
 /**
@@ -308,13 +321,22 @@ if ($ai_settings_res && $ai_settings_res->num_rows > 0) {
     }
 }
 
-$ai_enabled = ($ai_cfg['gemini_ai_enabled'] ?? '0') === '1';
+$raw_enabled = trim($ai_cfg['gemini_ai_enabled'] ?? '0');
+$ai_enabled = ($raw_enabled === '1' || $raw_enabled === 'true' || $raw_enabled === 'on');
 $api_key = trim($ai_cfg['gemini_api_key'] ?? '');
 $model = (!empty($ai_cfg['gemini_model']) && $ai_cfg['gemini_model'] !== 'gemini-1.5-flash') ? trim($ai_cfg['gemini_model']) : 'gemini-3.5-flash-lite';
 $system_instruction = trim($ai_cfg['gemini_system_instruction'] ?? '');
 
+$ai_debug = [
+    'ai_enabled' => $ai_enabled,
+    'raw_enabled_val' => $raw_enabled,
+    'has_api_key' => !empty($api_key),
+    'api_key_len' => strlen($api_key),
+    'model' => $model
+];
+
 if ($ai_enabled && !empty($api_key)) {
-    $ai_answer = callGeminiAPI($api_key, $message_raw, $model, $system_instruction);
+    $ai_answer = callGeminiAPI($api_key, $message_raw, $model, $system_instruction, $ai_debug);
     if ($ai_answer !== false && !empty($ai_answer)) {
         $formatted_answer = formatAiMarkdown($ai_answer);
         $badge = '<div style="margin-top:10px; font-size:0.75rem; color:#888; border-top:1px dashed #e2e8f0; padding-top:6px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#f59e0b;"></i> Dijawab oleh AI Pustabots</div>';
@@ -341,6 +363,7 @@ if (!empty($wa_number)) {
 safe_json_output([
     'status' => 'success', 
     'answer' => $fallback . $wa_link,
-    'source' => 'fallback_wa'
+    'source' => 'fallback_wa',
+    'debug' => $ai_debug
 ]);
 ?>
