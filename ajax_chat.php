@@ -142,6 +142,20 @@ function formatAiMarkdown($text) {
     return $text;
 }
 
+/**
+ * Format markdown ringan pada teks FAQ (bold, italic) tanpa merusak tag HTML yang sudah ada
+ */
+function formatFaqText($text) {
+    // 1. Ubah **teks** menjadi <strong>teks</strong>
+    $text = preg_replace('/\*\*(.*?)\*\*/s', '<strong>$1</strong>', $text);
+    
+    // 2. Ubah *teks* menjadi <em>teks</em>
+    $text = preg_replace('/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/s', '<em>$1</em>', $text);
+
+    // 3. Newline ke <br>
+    return nl2br($text);
+}
+
 // Fetch WhatsApp Number from Settings
 $wa_number = '';
 $settings_res = $conn->query("SELECT setting_value FROM settings WHERE setting_key = 'contact_wa'");
@@ -278,7 +292,7 @@ if ($is_quick_reply && $faq_id > 0) {
 if ($found) {
     safe_json_output([
         'status' => 'success', 
-        'answer' => nl2br($response_text),
+        'answer' => formatFaqText($response_text),
         'source' => 'faq_database'
     ]);
 }
