@@ -326,14 +326,22 @@ function sendMessage() {
         },
         body: JSON.stringify({ message: message })
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => response.text())
+    .then(text => {
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error('Pustabots response parse error:', text);
+            data = { answer: 'Maaf, Pustabots sedang menyinkronkan data. Silakan coba kirim pesan Anda sekali lagi.' };
+        }
         setTimeout(() => {
             removeTyping();
             addMessage(data.answer, 'bot');
-        }, 600); // Simulate network/thinking delay
+        }, 400);
     })
     .catch(error => {
+        console.error('Pustabots fetch error:', error);
         removeTyping();
         addMessage('Maaf, terjadi kesalahan jaringan. Silakan coba lagi nanti.', 'bot');
     });
@@ -358,14 +366,22 @@ function sendQuickReply(id, text) {
         },
         body: JSON.stringify({ is_quick_reply: true, faq_id: id })
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => response.text())
+    .then(text => {
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error('Pustabots response parse error:', text);
+            data = { answer: 'Maaf, Pustabots sedang menyinkronkan data. Silakan coba kirim pesan Anda sekali lagi.' };
+        }
         setTimeout(() => {
             removeTyping();
             addMessage(data.answer, 'bot');
-        }, 500);
+        }, 400);
     })
     .catch(error => {
+        console.error('Pustabots fetch error:', error);
         removeTyping();
         addMessage('Maaf, terjadi kesalahan jaringan. Silakan coba lagi nanti.', 'bot');
     });

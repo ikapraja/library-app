@@ -1,11 +1,37 @@
 <?php
 require_once 'db.php';
 
-header('Content-Type: application/json');
+// Pastikan charset koneksi adalah UTF-8
+if (isset($conn) && $conn instanceof mysqli) {
+    @$conn->set_charset('utf8mb4');
+}
+
+header('Content-Type: application/json; charset=utf-8');
+
+/**
+ * Keluarkan output JSON yang selalu aman dari karakter malformed UTF-8
+ */
+function safe_json_output($data) {
+    array_walk_recursive($data, function(&$item) {
+        if (is_string($item)) {
+            $item = str_replace(["\x95", "ÔÇó", "â€¢", "Â"], ["•", "•", "•", ""], $item);
+            $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
+        }
+    });
+
+    $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+    if ($json === false) {
+        $json = json_encode([
+            'status' => 'error',
+            'answer' => 'Maaf, terjadi kendala saat menampilkan jawaban. Silakan coba sesaat lagi.'
+        ]);
+    }
+    echo $json;
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
-    exit;
+    safe_json_output(['status' => 'error', 'message' => 'Invalid request']);
 }
 
 $input = json_decode(file_get_contents('php://input'), true);
@@ -15,8 +41,7 @@ $is_quick_reply = isset($input['is_quick_reply']) ? $input['is_quick_reply'] : f
 $faq_id      = isset($input['faq_id']) ? (int)$input['faq_id'] : 0;
 
 if (empty($message) && !$is_quick_reply) {
-    echo json_encode(['status' => 'success', 'answer' => 'Halo! Ada yang bisa Pustabots bantu?']);
-    exit;
+    safe_json_output(['status' => 'success', 'answer' => 'Halo! Ada yang bisa Pustabots bantu?']);
 }
 
 /**
@@ -251,12 +276,11 @@ if ($is_quick_reply && $faq_id > 0) {
 
 // Jika jawaban ditemukan dari FAQ resmi kampus
 if ($found) {
-    echo json_encode([
+    safe_json_output([
         'status' => 'success', 
         'answer' => nl2br($response_text),
         'source' => 'faq_database'
     ]);
-    exit;
 }
 
 // =============================================
@@ -281,12 +305,11 @@ if ($ai_enabled && !empty($api_key)) {
         $formatted_answer = formatAiMarkdown($ai_answer);
         $badge = '<div style="margin-top:10px; font-size:0.75rem; color:#888; border-top:1px dashed #e2e8f0; padding-top:6px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#f59e0b;"></i> Dijawab oleh AI Pustabots</div>';
         
-        echo json_encode([
+        safe_json_output([
             'status' => 'success',
             'answer' => $formatted_answer . $badge,
             'source' => 'gemini_ai'
         ]);
-        exit;
     }
 }
 
@@ -301,7 +324,7 @@ if (!empty($wa_number)) {
     $wa_link = "<br><br><a href='https://wa.me/{$wa_number}?text={$encoded_msg}' target='_blank' style='display:inline-block; background:#25D366; color:white; padding:8px 15px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:0.9em;'><i class='fa-brands fa-whatsapp'></i> Chat via WhatsApp</a>";
 }
 
-echo json_encode([
+safe_json_output([
     'status' => 'success', 
     'answer' => $fallback . $wa_link,
     'source' => 'fallback_wa'
