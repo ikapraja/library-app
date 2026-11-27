@@ -99,15 +99,15 @@
             <?php if (isset($total_pages) && $total_pages > 1): ?>
             <div class="pagination">
                 <?php if ($page > 1): ?>
-                    <a href="?page=<?php echo $page - 1; ?><?php echo $query_params; ?>" class="page-link"><i class="fa-solid fa-chevron-left"></i></a>
+                    <a href="galeri?page=<?php echo $page - 1; ?><?php echo $query_params; ?>" class="page-link"><i class="fa-solid fa-chevron-left"></i></a>
                 <?php endif; ?>
                 
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="?page=<?php echo $i; ?><?php echo $query_params; ?>" class="page-link <?php echo ($i == $page) ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                    <a href="galeri?page=<?php echo $i; ?><?php echo $query_params; ?>" class="page-link <?php echo ($i == $page) ? 'active' : ''; ?>"><?php echo $i; ?></a>
                 <?php endfor; ?>
                 
                 <?php if ($page < $total_pages): ?>
-                    <a href="?page=<?php echo $page + 1; ?><?php echo $query_params; ?>" class="page-link"><i class="fa-solid fa-chevron-right"></i></a>
+                    <a href="galeri?page=<?php echo $page + 1; ?><?php echo $query_params; ?>" class="page-link"><i class="fa-solid fa-chevron-right"></i></a>
                 <?php endif; ?>
             </div>
             <?php endif; ?>

@@ -159,7 +159,7 @@ if ($is_quick_reply && $faq_id > 0) {
 
     $best_score  = 0;
     $best_answer = "";
-    $THRESHOLD   = 1; // Minimal skor 1 agar terjawab
+    $THRESHOLD   = 6; // Minimal skor 6 agar terjawab oleh FAQ internal
 
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -174,9 +174,17 @@ if ($is_quick_reply && $faq_id > 0) {
 
                 // Kata kunci adalah satu kata
                 if (strpos($kw, ' ') === false) {
-                    // Cocok substring di pesan (menangkap imbuhan: pinjam = meminjam, dipinjam, peminjaman)
-                    if (strpos($clean_message, $kw) !== false) {
-                        $score += 5;
+                    // Gunakan batas kata (word boundary) dan imbuhan bahasa Indonesia
+                    // agar tidak salah mencocokkan substring (contoh: 'neliti' di dalam kata 'penelitian')
+                    $special_exact = ['neliti', 'opac', 'garuda', 'perpusnas', 'moraref', 'turnitin', 'kkw', 'ojs', 'buku'];
+                    if (in_array($kw, $special_exact)) {
+                        $kw_pattern = '/\b' . preg_quote($kw, '/') . '\b/i';
+                    } else {
+                        $kw_pattern = '/\b(me|di|pe|ter|ber)?' . preg_quote($kw, '/') . '(an|i|kan|nya)?\b/i';
+                    }
+
+                    if (preg_match($kw_pattern, $clean_message)) {
+                        $score += 6;
                     }
                 } else {
                     // Kata kunci adalah frase multi-kata
@@ -184,7 +192,7 @@ if ($is_quick_reply && $faq_id > 0) {
 
                     $matched_in_phrase = 0;
                     foreach ($kw_words as $kw_w) {
-                        if (strpos($clean_message, $kw_w) !== false) {
+                        if (preg_match('/\b' . preg_quote($kw_w, '/') . '\b/i', $clean_message)) {
                             $matched_in_phrase++;
                         }
                     }
@@ -192,8 +200,8 @@ if ($is_quick_reply && $faq_id > 0) {
                     if ($kw_word_count > 0 && $matched_in_phrase === $kw_word_count) {
                         // Semua kata dalam frase cocok → skor tinggi
                         $score += $kw_word_count * 10;
-                    } elseif ($kw_word_count > 1 && $matched_in_phrase >= ceil($kw_word_count * 0.6)) {
-                        // >=60% kata frase cocok → skor sedang
+                    } elseif ($kw_word_count > 1 && $matched_in_phrase >= ceil($kw_word_count * 0.7)) {
+                        // >=70% kata frase cocok → skor sedang
                         $score += $matched_in_phrase * 4;
                     }
                 }
@@ -206,7 +214,7 @@ if ($is_quick_reply && $faq_id > 0) {
 
             $q_match = 0;
             foreach ($q_words as $qw) {
-                if (strpos($clean_message, $qw) !== false) {
+                if (preg_match('/\b' . preg_quote($qw, '/') . '\b/i', $clean_message)) {
                     $q_match++;
                 }
             }
@@ -218,12 +226,12 @@ if ($is_quick_reply && $faq_id > 0) {
                 }
             }
 
-            // --- Metode 3: Pencocokan kata pengguna ke kata kunci (reverse check) ---
+            // --- Metode 3: Pencocokan kata pengguna ke kata kunci (exact token match) ---
             foreach ($msg_words as $mw) {
                 if (strlen($mw) < 3) continue;
                 foreach ($keyword_list as $kw) {
-                    if (strpos($kw, $mw) !== false || strpos($mw, $kw) !== false) {
-                        $score += 2;
+                    if ($kw === $mw) {
+                        $score += 3;
                     }
                 }
             }
