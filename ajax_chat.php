@@ -52,15 +52,28 @@ function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', 
 
     if (empty($systemInstruction)) {
         $systemInstruction = "Kamu adalah Pustabots, asisten kecerdasan buatan resmi dari Perpustakaan Politeknik Keselamatan Transportasi Jalan (PKTJ) Tegal (Kementerian Perhubungan RI).\n"
-            . "Tugasmu membantu taruna, dosen, staf, dan pemustaka umum dengan ramah, santun, jelas, dan solutif.\n"
-            . "Fokus: literasi, layanan perpustakaan, pencarian referensi/skripsi, materi keselamatan jalan, rekayasa lalu lintas, otomotif, dan perkeretaapian.\n"
-            . "Jika ditanya hal di luar konteks perpustakaan atau studi kampus PKTJ, tolak dengan sopan dan kembalikan ke topik perpustakaan.\n"
-            . "Bila membutuhkan administrasi resmi (tanda tangan berkas bebas pustaka, dll), arahkan ke WhatsApp resmi Pustakawan.\n"
-            . "Berikan jawaban ringkas, informatif, dan terstruktur rapi (gunakan bullet/poin bila perlu).";
+            . "Tugasmu membantu taruna, dosen, staf, dan pemustaka umum dengan ramah, santun, jelas, dan solutif.\n\n"
+            . "Fakta Resmi Kampus & Perpustakaan:\n"
+            . "- Direktur PKTJ saat ini: Bapak Dr. Bambang Istiyanto, S.Si.T., A.TD., M.T.\n"
+            . "- Kepala Perpustakaan PKTJ saat ini: Ibu Supriatin, S.S.T.\n"
+            . "- Lokasi Kampus: Kampus Margadana (Jl. Abdul Syukur No. 17) dan Kampus Perintis (Jl. Perintis Kemerdekaan No. 17, Tegal).\n"
+            . "- Program Studi: D4 Manajemen Rekayasa Lalu Lintas (MRL), D4 Teknologi Rekayasa Otomotif (TRO), D3 Keselamatan Transportasi Jalan (KTJ).\n"
+            . "- Jam Layanan: Senin - Kamis 08.00 - 16.00 WIB, Jumat 08.30 - 16.30 WIB.\n\n"
+            . "Pedoman Hemat Token & Menjawab Efisien:\n"
+            . "1. Berikan jawaban yang padat, ringkas, terstruktur (gunakan poin/bullet), dan langsung ke inti jawaban tanpa kalimat pengantar basa-basi bertele-tele.\n"
+            . "2. Fokus utama: literasi, referensi akademik/skripsi, materi keselamatan transportasi jalan, rekayasa lalu lintas, otomotif, dan perkeretaapian.\n"
+            . "3. Jika pertanyaan di luar konteks perpustakaan atau studi kampus PKTJ, tolak secara halus dan ringkas, lalu arahkan kembali ke topik perpustakaan.\n"
+            . "4. Jika membutuhkan administrasi resmi (misal tanda tangan bebas pustaka fisik), arahkan ke WhatsApp resmi Pustakawan.";
     }
 
-    // Daftar model yang akan dicoba (model utama lalu fallback ke gemini-3.5-flash-lite)
-    $modelClean = (!empty($model) && $model !== 'gemini-1.5-flash' && $model !== 'gemini-2.0-flash') ? trim($model) : 'gemini-3.5-flash-lite';
+    // Daftar model yang sudah ditutup/deprecated oleh Google untuk pengguna baru
+    $deprecated = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-1.5-pro', 'gemini-2.5-pro'];
+    if (in_array($model, $deprecated) || empty($model)) {
+        $modelClean = 'gemini-3.5-flash-lite';
+    } else {
+        $modelClean = trim($model);
+    }
+
     $modelsToTry = [$modelClean];
     if ($modelClean !== 'gemini-3.5-flash-lite') {
         $modelsToTry[] = 'gemini-3.5-flash-lite';
@@ -82,7 +95,7 @@ function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', 
         ],
         "generationConfig" => [
             "temperature" => 0.7,
-            "maxOutputTokens" => 800
+            "maxOutputTokens" => 450
         ]
     ];
     $jsonPayload = json_encode($payload);
@@ -110,6 +123,9 @@ function callGeminiAPI($apiKey, $userMessage, $model = 'gemini-3.5-flash-lite', 
         $debug['last_model'] = $mTarget;
         $debug['http_code'] = $httpCode;
         if ($curlError) $debug['curl_error'] = $curlError;
+        if ($httpCode === 429) {
+            $debug['quota_exceeded'] = true;
+        }
 
         if (!$curlError && $httpCode === 200 && $response) {
             $data = json_decode($response, true);
@@ -350,20 +366,52 @@ if ($ai_enabled && !empty($api_key)) {
 }
 
 // =============================================
-// JALUR 3: WHATSAPP ADMIN (FALLBACK)
+// JALUR 3: SMART FALLBACK (FAQ POPULER + WHATSAPP)
 // =============================================
-$fallback = "Maaf, Pustabots belum mengerti pertanyaan Anda terkait <strong>\"" . htmlspecialchars($message_raw) . "\"</strong>.<br><br>Agar lebih jelas, silakan mengobrol langsung dengan Pustakawan kami melalui WhatsApp.";
+$is_quota_exceeded = !empty($ai_debug['quota_exceeded']) || (($ai_debug['http_code'] ?? 0) === 429);
 
-$wa_link = "";
+// Ambil pertanyaan FAQ populer dari database untuk ditampilkan sebagai tombol langsung di bubble chat
+$faq_suggestions_html = "";
+$sug_res = $conn->query("SELECT id, question FROM chatbot_faq WHERE show_on_homepage = 1 ORDER BY id ASC LIMIT 4");
+if ($sug_res && $sug_res->num_rows > 0) {
+    $faq_buttons = "";
+    while ($sr = $sug_res->fetch_assoc()) {
+        $q_id = (int)$sr['id'];
+        $q_text = htmlspecialchars($sr['question'], ENT_QUOTES, 'UTF-8');
+        $q_js = addslashes($sr['question']);
+        $faq_buttons .= "<button type=\"button\" onclick=\"sendQuickReply({$q_id}, '{$q_js}')\" style=\"width:100%; text-align:left; background:#ffffff; border:1px solid #bfdbfe; color:#1e40af; border-radius:10px; padding:7px 10px; font-size:0.83rem; cursor:pointer; margin-bottom:5px; transition:0.2s;\"><i class=\"fa-regular fa-circle-question\" style=\"color:#3b82f6; margin-right:5px;\"></i> {$q_text}</button>";
+    }
+    
+    $faq_suggestions_html = "
+    <div style=\"margin-top:12px; padding-top:10px; border-top:1px dashed #cbd5e1;\">
+        <div style=\"font-size:0.82rem; font-weight:600; color:#475569; margin-bottom:8px;\">
+            <i class=\"fa-solid fa-list-check\" style=\"color:#2563eb;\"></i> Pertanyaan Populer yang Sering Diajukan:
+        </div>
+        {$faq_buttons}
+    </div>";
+}
+
+$wa_button = "";
 if (!empty($wa_number)) {
     $encoded_msg = urlencode("Halo Admin Perpustakaan PKTJ, saya ingin bertanya terkait: " . $message_raw);
-    $wa_link = "<br><br><a href='https://wa.me/{$wa_number}?text={$encoded_msg}' target='_blank' style='display:inline-block; background:#25D366; color:white; padding:8px 15px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:0.9em;'><i class='fa-brands fa-whatsapp'></i> Chat via WhatsApp</a>";
+    $wa_button = "
+    <div style=\"margin-top:10px;\">
+        <a href=\"https://wa.me/{$wa_number}?text={$encoded_msg}\" target=\"_blank\" style=\"display:inline-flex; align-items:center; gap:6px; background:#25D366; color:white; padding:8px 15px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:0.85rem; box-shadow:0 2px 5px rgba(37,211,102,0.3);\">
+            <i class=\"fa-brands fa-whatsapp\" style=\"font-size:1.1rem;\"></i> Chat Pustakawan via WhatsApp
+        </a>
+    </div>";
+}
+
+if ($is_quota_exceeded) {
+    $fallback = "Maaf, kuota harian asisten AI cerdas saat ini sedang mencapai batas maksimum atau dalam pemulihan.<br><br>Jangan khawatir, Anda dapat memilih topik pertanyaan populer di bawah ini, atau langsung mengobrol dengan Pustakawan kami:";
+} else {
+    $fallback = "Maaf, Pustabots belum menemukan jawaban otomatis untuk <strong>\"" . htmlspecialchars($message_raw) . "\"</strong>.<br><br>Anda dapat memilih topik bantuan perpustakaan di bawah ini, atau menanyakan langsung kepada Pustakawan kami:";
 }
 
 safe_json_output([
     'status' => 'success', 
-    'answer' => $fallback . $wa_link,
-    'source' => 'fallback_wa',
+    'answer' => $fallback . $faq_suggestions_html . $wa_button,
+    'source' => $is_quota_exceeded ? 'quota_exceeded_fallback' : 'fallback_wa',
     'debug' => $ai_debug
 ]);
 ?>
